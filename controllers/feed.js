@@ -192,6 +192,54 @@ exports.deletePost = (req, res, next) => {
     });
 };
 
+exports.getStatus = (req, res, next) => {
+  // Retrieve information about the currently logged in user
+  User.findById(req.userId)
+    // Return a response with the user's current status
+    .then((user) => {
+      if (!user) {
+        const error = new Error('No user found');
+        error.statusCode = 404;
+        throw error;
+      }
+      res.status(200).json({ message: 'success', status: user.status });
+    })
+    // Handle errors
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.updateStatus = (req, res, next) => {
+  // get new status content from request
+  const newStatus = req.body.status;
+
+  // overwrite old status with new via user model
+  User.findById(req.userId)
+    .then((user) => {
+      if (!user) {
+        const error = new Error('No user found.');
+        error.statusCode = 404;
+        throw error;
+      }
+
+      user.status = newStatus;
+      return user.save();
+    })
+    .then((user) => {
+      res.status(200).json({ message: 'success', status: user.status });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
 const clearImage = (filePath) => {
   filePath = path.join(__dirname, '..', filePath);
   fs.unlink(filePath, (err) => {

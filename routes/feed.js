@@ -6,6 +6,15 @@ const isAuth = require('../middleware/is-auth');
 
 router.get('/posts', isAuth, feedController.getPosts);
 
+router.get('/status', isAuth, feedController.getStatus);
+
+router.put(
+  '/status',
+  isAuth,
+  [body('status').trim().not().isEmpty()],
+  feedController.updateStatus
+);
+
 router.get('/post/:postId', isAuth, feedController.getPost);
 router.post(
   '/post',
