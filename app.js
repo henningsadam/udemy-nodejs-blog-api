@@ -28,9 +28,6 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const feedRoutes = require('./routes/feed');
-const authRoutes = require('./routes/auth');
-
 // app.use(bodyParser.urlencoded())
 app.use(bodyParser.json());
 app.use(
@@ -48,9 +45,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/feed', feedRoutes);
-app.use('/auth', authRoutes);
-
 app.use((error, req, res, next) => {
   console.log(error);
   const status = error.statusCode || 500;
@@ -62,10 +56,6 @@ app.use((error, req, res, next) => {
 mongoose
   .connect(process.env.MONGO_DB_CONNECTION_STRING)
   .then(() => {
-    const server = app.listen(8080);
-    const io = require('./socket').init(server);
-    io.on('connection', socket => {
-      console.log('Client connected - ID: ' + socket.id)
-    })
+    app.listen(8080);
   })
   .catch((err) => console.log(err));
