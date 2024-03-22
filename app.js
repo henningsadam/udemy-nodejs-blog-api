@@ -99,8 +99,10 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message, data: data });
 });
 
+const dbConnectionString = `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@udemy-sandbox.rayfqu3.mongodb.net/${process.env.MONGO_DB_NAME}`;
+
 mongoose
-  .connect(process.env.MONGO_DB_CONNECTION_STRING)
+  .connect(dbConnectionString)
   .then(() => {
     app.listen(8080);
   })
