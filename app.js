@@ -104,6 +104,6 @@ const dbConnectionString = `mongodb+srv://${process.env.MONGO_DB_USER}:${process
 mongoose
   .connect(dbConnectionString)
   .then(() => {
-    app.listen(8080);
+    app.listen(process.env.PORT || 4000);
   })
   .catch((err) => console.log(err));
